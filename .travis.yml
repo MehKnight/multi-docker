@@ -1,24 +1,24 @@
-language: generic 
 sudo: required
+language: generic
+
 services:
-  - dockerfile
+  - docker
 
 before_install:
   - docker build -t luciuno/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true luciuno/react-test npm test -- --coverage
+  - docker run -e CI=true luciuno/react-test npm test
 
 after_success:
-- docker build -t luciuno/multi-client ./client
-- docker build -t luciuno/multi-nginx ./nginx
-- docker build -t luciuno/multi-server ./server
-- docker build -t luciuno/multi-worker ./worker
-
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-
-- docker push luciuno/multi-client
-- docker push luciuno/multi-nginx
-- docker push luciuno/multi-server
-- docker push luciuno/multi-worker
-
+  - docker build -t luciuno/multi-client ./client
+  - docker build -t luciuno/multi-nginx ./nginx
+  - docker build -t luciuno/multi-server ./server
+  - docker build -t luciuno/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push luciuno/multi-client
+  - docker push luciuno/multi-nginx
+  - docker push luciuno/multi-server
+  - docker push luciuno/multi-worker
