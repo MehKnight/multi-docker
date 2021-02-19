@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - dockerfile
+
+before_install:
+  - docker build -t luciuno/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run luciuno/react_test npm test -- --coverage
+
+after_success:
+- docker build -t luciuno/multi-client ./client
+- docker build -t luciuno/multi-nginx ./nginx
+- docker build -t luciuno/multi-server ./server
+- docker build -t luciuno/multi-worker ./worker
+
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+- docker push luciuno/multi-client
+- docker push luciuno/multi-nginx
+- docker push luciuno/multi-server
+- docker push luciuno/multi-worker
+
