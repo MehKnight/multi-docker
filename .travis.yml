@@ -6,7 +6,7 @@ before_install:
   - docker build -t luciuno/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run luciuno/react_test npm test -- --coverage
+  - docker run luciuno/react-test npm test -- --coverage
 
 after_success:
 - docker build -t luciuno/multi-client ./client
